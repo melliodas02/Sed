@@ -1,0 +1,77 @@
+.nav-link{
+    text-decoration: none;
+    color: white;
+}
+
+.bg-navbar {
+    background-color: #2A3340;
+}
+
+@media screen and (min-width: 1000px){
+    .logo-img {
+        max-width: 250px;
+    }
+}
+
+@media screen and (max-width: 999px){
+    .logo-img {
+        max-width: 220px;
+    }
+}
+
+.circle {
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    background-color: rgb(44, 108, 128);
+    position: relative;
+}
+.circle::after {
+    content: " ";
+    position: absolute;
+    display: block;
+    background-color: #fff;
+    height: 2px;
+    margin-top: -1px;
+    top: 50%;
+    left: 5px;
+    right: 5px;
+    z-index: 9;
+}
+.circle::before {
+    content: " ";
+    position: absolute;
+    display: block;
+    background-color: #fff;
+    width: 2px;
+    margin-left: -1px;
+    left: 50%;
+    top: 5px;
+    bottom: 5px;
+    z-index: 9;
+}
+
+.button-nvr {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgb(0 0 0 / 0%);
+    -webkit-transition-duration: 0.3s;
+    transition-duration: 0.3s;
+    -webkit-transition-property: box-shadow, transform;
+    transition-property: box-shadow, transform;
+
+    background: #fc0fff;
+    background: -moz-linear-gradient(left, #fc0fff 0%, #0d9dff 100%);
+    background: -webkit-linear-gradient(left, #fc0fff 0%,#0d9dff 100%);
+    background: linear-gradient(to right, #fc0fff 0%,#0d9dff 100%);
+
+    border-radius: 2rem;
+}
+
+.button-nvr > div > h1, .button-nvr > div > p {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
