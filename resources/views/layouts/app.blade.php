@@ -35,7 +35,7 @@
     <div class="container-fluid">
         <div class="row flex-nowrap">
             <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-navbar">
-                <div class="d-flex flex-column align-items-center align-items-start px-3 pt-2 text-wh min-vh-100">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                     <a href="{{ route('home') }}"
                        class="d-flex align-items-center pb-3 mb-md-0 text-white text-decoration-none">
                         <span class="d-none d-sm-inline"><img class="logo-img" src="{{ url('images') }}/logo.png"></span>
