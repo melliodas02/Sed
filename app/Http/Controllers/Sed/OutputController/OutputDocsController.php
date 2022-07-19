@@ -51,7 +51,12 @@ class OutputDocsController extends Controller
 
         $last = Document::orderBy('created_at', 'desc')->first();
 
-        $number = $last->id + 1;
+        if ($last == null)
+        {
+            $number = 1;
+        } else {
+            $number = $last->id + 1;
+        }
 
         $doc_number = date('Y') . date('m') . '-' . $number;
 
