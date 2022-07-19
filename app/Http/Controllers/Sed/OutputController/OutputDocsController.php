@@ -16,11 +16,29 @@ use function PHPUnit\Framework\returnArgument;
 
 class OutputDocsController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:docs-list|docs-create|docs-edit|docs-delete', ['only' => [
+            'CorrespondenceWithStateAuthoritiesOutput',
+            'CorrespondenceWithOrganizationsAndEnterprisesOutput',
+            'DocumentsFromAHigherLevelOrganizationsOutput',
+            'save'
+        ]]);
+        $this->middleware('permission:docs-create', ['only' => ['add', 'save']]);
+        $this->middleware('permission:docs-edit', ['only' => ['edit', 'put']]);
+        $this->middleware('permission:docs-delete', ['only' => ['delete']]);
+    }
+
     public function CorrespondenceWithStateAuthoritiesOutput()
     {
         $data_title = DocCategory::find(4);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 4);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель'))
+        {
+            $data = Document::get()->where('Category', 4);
+        } else {
+            $data = Document::get()->where('Category', 4)->where('Sender', auth()->user()->id);
+        }
         $url = 'CorrespondenceWithStateAuthoritiesOutput';
         return view('sed.OutputDocs.index', compact('data', 'data_title', 'url'));
     }
@@ -29,7 +47,12 @@ class OutputDocsController extends Controller
     {
         $data_title = DocCategory::find(5);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 5);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель'))
+        {
+            $data = Document::get()->where('Category', 5);
+        } else {
+            $data = Document::get()->where('Category', 5)->where('Sender', auth()->user()->id);
+        }
         $url = 'CorrespondenceWithOrganizationsAndEnterprisesOutput';
         return view('sed.OutputDocs.index', compact('data', 'data_title', 'url'));
     }
@@ -38,7 +61,12 @@ class OutputDocsController extends Controller
     {
         $data_title = DocCategory::find(6);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 6);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель'))
+        {
+            $data = Document::get()->where('Category', 6);
+        } else {
+            $data = Document::get()->where('Category', 6)->where('Sender', auth()->user()->id);
+        }
         $url = 'DocumentsFromAHigherLevelOrganizationsOutput';
         return view('sed.OutputDocs.index', compact('data', 'data_title', 'url'));
     }
@@ -185,8 +213,8 @@ class OutputDocsController extends Controller
     public function info($id)
     {
         $data = Document::find($id);
-        $user = User::find($data->Signatory);
-        $org = Organization::find($data->Sender);
+        $user = User::find($data->Sender);
+        $org = Organization::find($data->Signatory);
         $docs = DocumentInDocsSaved::get()->where('Document', $data->id)->first();
         $doc = DocsSaved::find($docs->DocsSaved);
         $content = Storage::disk('public')->get($doc->Doc_Url);

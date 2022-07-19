@@ -29,7 +29,9 @@
                         <td class="">
                             <a href="/orders/{{ $url }}/{{ $org->id }}" class="btn btn-info">Подробнее</a>
                             <a href="/orders/{{ $org->id }}/edit" class="btn btn-success">Редактировать</a>
+                            @if (auth()->user()->hasrole('Администратор-делопроизводитель'))
                             <a href="/orders/{{ $org->id }}/remove" class="btn btn-danger">Удалить</a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

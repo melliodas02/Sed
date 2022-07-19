@@ -15,11 +15,28 @@ use Illuminate\Support\Facades\Storage;
 
 class OrderController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:docs-list|docs-create|docs-edit|docs-delete', ['only' => [
+            'OrdersOnTheBasicsOfActivity',
+            'OrdersOnAdministrativeAndEconomicIssues',
+            'TravelOrders',
+            'save'
+        ]]);
+        $this->middleware('permission:docs-create', ['only' => ['add', 'save']]);
+        $this->middleware('permission:docs-edit', ['only' => ['edit', 'put']]);
+        $this->middleware('permission:docs-delete', ['only' => ['delete']]);
+    }
+
     public function OrdersOnTheBasicsOfActivity()
     {
         $data_title = DocCategory::find(7);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 7);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель')) {
+            $data = Document::get()->where('Category', 7);
+        } else {
+            $data = Document::get()->where('Category', 7)->where('Sender', auth()->user()->id);
+        }
         $url = 'OrdersOnTheBasicsOfActivity';
         return view('sed.Orders.index', compact('data', 'data_title', 'url'));
     }
@@ -28,8 +45,12 @@ class OrderController extends Controller
     {
         $data_title = DocCategory::find(8);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 8);
-        $url = 'OrdersOnAdministrativeAndEconomicIssues';
+        if (auth()->user()->hasRole('Администратор-делопроизводитель')) {
+            $data = Document::get()->where('Category', 8);
+        } else {
+            $data = Document::get()->where('Category', 8)->where('Sender', auth()->user()->id);
+        }
+        $url = 'OrdersOnАдминистратор-делопроизводительistrativeAndEconomicIssues';
         return view('sed.Orders.index', compact('data', 'data_title', 'url'));
     }
 
@@ -37,7 +58,11 @@ class OrderController extends Controller
     {
         $data_title = DocCategory::find(9);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 9);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель')) {
+            $data = Document::get()->where('Category', 9);
+        } else {
+            $data = Document::get()->where('Category', 9)->where('Sender', auth()->user()->id);
+        }
         $url = 'TravelOrders';
         return view('sed.Orders.index', compact('data', 'data_title', 'url'));
     }
@@ -50,8 +75,7 @@ class OrderController extends Controller
 
         $last = Document::orderBy('created_at', 'desc')->first();
 
-        if ($last == null)
-        {
+        if ($last == null) {
             $number = 1;
         } else {
             $number = $last->id + 1;
@@ -65,9 +89,9 @@ class OrderController extends Controller
     public function save(Request $request)
     {
         $file = $request->Document;
-        $fileName = time()."_".$file->getClientOriginalName();
-        $filePath = "/Orders/".date("Y")."/".date("m")."/".$fileName."/".$fileName;
-        $dir = "/Orders/".date("Y")."/".date("m")."/".$fileName."/";
+        $fileName = time() . "_" . $file->getClientOriginalName();
+        $filePath = "/Orders/" . date("Y") . "/" . date("m") . "/" . $fileName . "/" . $fileName;
+        $dir = "/Orders/" . date("Y") . "/" . date("m") . "/" . $fileName . "/";
 
         $file->storeAs($dir, $fileName, 'public');
 
@@ -85,7 +109,7 @@ class OrderController extends Controller
 
         $doc_saved = new DocsSaved;
         $doc_saved->name = $fileName;
-        $doc_saved->Doc_Url  = $filePath;
+        $doc_saved->Doc_Url = $filePath;
         $doc_saved->DocType = $file->extension();
         $doc_saved->save();
 
@@ -185,8 +209,8 @@ class OrderController extends Controller
     public function info($id)
     {
         $data = Document::find($id);
-        $user = User::find($data->Signatory);
-        $org = Organization::find($data->Sender);
+        $user = User::find($data->Sender);
+        $org = Organization::find($data->Signatory);
         $docs = DocumentInDocsSaved::get()->where('Document', $data->id)->first();
         $doc = DocsSaved::find($docs->DocsSaved);
         $content = Storage::disk('public')->get($doc->Doc_Url);

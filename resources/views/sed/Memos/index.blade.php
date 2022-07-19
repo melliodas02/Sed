@@ -29,7 +29,9 @@
                         <td class="">
                             <a href="/memos/{{ $url }}/{{ $org->id }}" class="btn btn-info">Подробнее</a>
                             <a href="{{ route('memos.edit', ['id' => $org->id]) }}" class="btn btn-success">Редактировать</a>
+                            @if (auth()->user()->hasrole('Администратор-делопроизводитель'))
                             <a href="{{ route('memos.delete', ['id' => $org->id]) }}" class="btn btn-danger">Удалить</a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

@@ -17,11 +17,28 @@ use function view;
 
 class InputDocsController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:docs-list|docs-create|docs-edit|docs-delete', ['only' => [
+            'DocumentsFromAHigherLevelOrganization',
+            'CorrespondeceWithStateAuthorities',
+            'CorrespondenceWithOrganizationsAndEnterprises',
+            'save'
+        ]]);
+        $this->middleware('permission:docs-create', ['only' => ['add', 'save']]);
+        $this->middleware('permission:docs-edit', ['only' => ['edit', 'put']]);
+        $this->middleware('permission:docs-delete', ['only' => ['delete']]);
+    }
+
     public function DocumentsFromAHigherLevelOrganization()
     {
         $data_title = DocCategory::find(1);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 1);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель')) {
+            $data = Document::get()->where('Category', 1);
+        } else {
+            $data = Document::get()->where('Category', 1)->where('Sender', auth()->user()->id);
+        }
         $url = 'DocumentsFromAHigherLevelOrganization';
         return view('sed.InputDocs.index', compact('data', 'data_title', 'url'));
     }
@@ -30,7 +47,11 @@ class InputDocsController extends Controller
     {
         $data_title = DocCategory::find(3);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 2);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель')) {
+            $data = Document::get()->where('Category', 2);
+        } else {
+            $data = Document::get()->where('Category', 2)->where('Sender', auth()->user()->id);
+        }
         $url = 'CorrespondeceWithStateAuthorities';
         return view('sed.InputDocs.index', compact('data', 'data_title', 'url'));
     }
@@ -39,7 +60,11 @@ class InputDocsController extends Controller
     {
         $data_title = DocCategory::find(3);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 3);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель')) {
+            $data = Document::get()->where('Category', 3);
+        } else {
+            $data = Document::get()->where('Category', 3)->where('Sender', auth()->user()->id);
+        }
         $url = 'CorrespondenceWithOrganizationsAndEnterprises';
         return view('sed.InputDocs.index', compact('data', 'data_title', 'url'));
     }
@@ -52,8 +77,7 @@ class InputDocsController extends Controller
 
         $last = Document::orderBy('created_at', 'desc')->first();
 
-        if ($last == null)
-        {
+        if ($last == null) {
             $number = 1;
         } else {
             $number = $last->id + 1;
@@ -190,8 +214,8 @@ class InputDocsController extends Controller
     public function info($id)
     {
         $data = Document::find($id);
-        $user = User::find($data->Signatory);
-        $org = Organization::find($data->Sender);
+        $user = User::find($data->Sender);
+        $org = Organization::find($data->Signatory);
         $docs = DocumentInDocsSaved::get()->where('Document', $data->id)->first();
         $doc = DocsSaved::find($docs->DocsSaved);
         $content = Storage::disk('public')->get($doc->Doc_Url);

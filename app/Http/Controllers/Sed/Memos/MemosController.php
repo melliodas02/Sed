@@ -15,11 +15,30 @@ use Illuminate\Support\Facades\Storage;
 
 class MemosController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:docs-list|docs-create|docs-edit|docs-delete', ['only' => [
+            'AboutEmployeeBusinessTrips',
+            'AboutTheDevelopmentAndChangeOfStaffSchedules',
+            'ForPurchase',
+            'AboutReimbursementOfExpenses',
+            'save'
+        ]]);
+        $this->middleware('permission:docs-create', ['only' => ['add', 'save']]);
+        $this->middleware('permission:docs-edit', ['only' => ['edit', 'put']]);
+        $this->middleware('permission:docs-delete', ['only' => ['delete']]);
+    }
+
     public function AboutEmployeeBusinessTrips()
     {
         $data_title = DocCategory::find(10);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 10);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель'))
+        {
+            $data = Document::get()->where('Category', 10);
+        } else {
+            $data = Document::get()->where('Category', 10)->where('Sender', auth()->user()->id);
+        }
         $url = 'AboutEmployeeBusinessTrips';
         return view('sed.Memos.index', compact('data', 'data_title', 'url'));
     }
@@ -28,7 +47,12 @@ class MemosController extends Controller
     {
         $data_title = DocCategory::find(11);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 11);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель'))
+        {
+            $data = Document::get()->where('Category', 11);
+        } else {
+            $data = Document::get()->where('Category', 11)->where('Sender', auth()->user()->id);
+        }
         $url = 'AboutTheDevelopmentAndChangeOfStaffSchedules';
         return view('sed.Memos.index', compact('data', 'data_title', 'url'));
     }
@@ -37,7 +61,12 @@ class MemosController extends Controller
     {
         $data_title = DocCategory::find(12);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 12);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель'))
+        {
+            $data = Document::get()->where('Category', 12);
+        } else {
+            $data = Document::get()->where('Category', 12)->where('Sender', auth()->user()->id);
+        }
         $url = 'ForPurchase';
         return view('sed.Memos.index', compact('data', 'data_title', 'url'));
     }
@@ -46,7 +75,12 @@ class MemosController extends Controller
     {
         $data_title = DocCategory::find(13);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 13);
+        if (auth()->user()->hasRole('Администратор-делопроизводитель'))
+        {
+            $data = Document::get()->where('Category', 13);
+        } else {
+            $data = Document::get()->where('Category', 13)->where('Sender', auth()->user()->id);
+        }
         $url = 'AboutReimbursementOfExpenses';
         return view('sed.Memos.index', compact('data', 'data_title', 'url'));
     }
@@ -200,8 +234,8 @@ class MemosController extends Controller
     public function info($id)
     {
         $data = Document::find($id);
-        $user = User::find($data->Signatory);
-        $org = Organization::find($data->Sender);
+        $user = User::find($data->Sender);
+        $org = Organization::find($data->Signatory);
         $docs = DocumentInDocsSaved::get()->where('Document', $data->id)->first();
         $doc = DocsSaved::find($docs->DocsSaved);
         $content = Storage::disk('public')->get($doc->Doc_Url);

@@ -45,11 +45,11 @@
         </div>
         <div class="row mt-3 d-flex justify-content-center">
             <div class="col-6 form-floating">
-                {!! Form::password('password', null, array('placeholder' => 'Пароль', 'class' => 'form-control')) !!}
+                {!! Form::text('password', null, array('placeholder' => 'Пароль', 'class' => 'form-control')) !!}
                 <label for="">Пароль</label>
             </div>
             <div class="col-6 form-floating">
-                {!! Form::password('confirm-password', null, array('placeholder' => 'Повторите пароль', 'class' => 'form-control')) !!}
+                {!! Form::text('confirm-password', null, array('placeholder' => 'Повторите пароль', 'class' => 'form-control')) !!}
                 <label for="">Повторите пароль</label>
             </div>
         </div>
@@ -60,7 +60,7 @@
             </div>
         </div>
         <div class="mt-3 col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-success">Редактировать</button>
+            <button type="submit" class="btn btn-success">Создать</button>
         </div>
         {!! Form::close() !!}
     </div>

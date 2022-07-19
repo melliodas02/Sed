@@ -15,12 +15,31 @@ use Illuminate\Support\Facades\Storage;
 
 class ContractsController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:docs-list|docs-create|docs-edit|docs-delete', ['only' => [
+            'PurchaseAndSaleAgreement',
+            'LeaseAgreement',
+            'DeliveryContract',
+            'ContractAgreement',
+            'save'
+        ]]);
+        $this->middleware('permission:docs-create', ['only' => ['add', 'save']]);
+        $this->middleware('permission:docs-edit', ['only' => ['edit', 'put']]);
+        $this->middleware('permission:docs-delete', ['only' => ['delete']]);
+    }
+
     public function PurchaseAndSaleAgreement()
     {
         $data_title = DocCategory::find(14);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 14);
-        $url = '';
+        if (auth()->user()->hasRole('Администратор-делопроизводитель'))
+        {
+            $data = Document::get()->where('Category', 14);
+        } else {
+            $data = Document::get()->where('Category', 14)->where('Sender', auth()->user()->id);
+        }
+        $url = 'PurchaseAndSaleAgreement';
         return view('sed.Contracts.index', compact('data_title', 'data', 'url'));
     }
 
@@ -28,8 +47,13 @@ class ContractsController extends Controller
     {
         $data_title = DocCategory::find(15);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 15);
-        $url = '';
+        if (auth()->user()->hasRole('Администратор-делопроизводитель'))
+        {
+            $data = Document::get()->where('Category', 15);
+        } else {
+            $data = Document::get()->where('Category', 15)->where('Sender', auth()->user()->id);
+        }
+        $url = 'LeaseAgreement';
         return view('sed.Contracts.index', compact('data_title', 'data', 'url'));
     }
 
@@ -37,8 +61,13 @@ class ContractsController extends Controller
     {
         $data_title = DocCategory::find(16);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 16);
-        $url = '';
+        if (auth()->user()->hasRole('Администратор-делопроизводитель'))
+        {
+            $data = Document::get()->where('Category', 16);
+        } else {
+            $data = Document::get()->where('Category', 16)->where('Sender', auth()->user()->id);
+        }
+        $url = 'DeliveryContract';
         return view('sed.Contracts.index', compact('data_title', 'data', 'url'));
     }
 
@@ -46,8 +75,13 @@ class ContractsController extends Controller
     {
         $data_title = DocCategory::find(17);
         $data_title = $data_title->title;
-        $data = Document::get()->where('Category', 17);
-        $url = '';
+        if (auth()->user()->hasRole('Администратор-делопроизводитель'))
+        {
+            $data = Document::get()->where('Category', 17);
+        } else {
+            $data = Document::get()->where('Category', 17)->where('Sender', auth()->user()->id);
+        }
+        $url = 'ContractAgreement';
         return view('sed.Contracts.index', compact('data_title', 'data', 'url'));
     }
 
@@ -200,8 +234,8 @@ class ContractsController extends Controller
     public function info($id)
     {
         $data = Document::find($id);
-        $user = User::find($data->Signatory);
-        $org = Organization::find($data->Sender);
+        $user = User::find($data->Sender);
+        $org = Organization::find($data->Signatory);
         $docs = DocumentInDocsSaved::get()->where('Document', $data->id)->first();
         $doc = DocsSaved::find($docs->DocsSaved);
         $content = Storage::disk('public')->get($doc->Doc_Url);

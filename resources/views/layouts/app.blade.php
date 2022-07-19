@@ -163,7 +163,7 @@
                                 <span class="ms-1 d-none d-sm-inline">Почта</span>
                             </a>
                         </li>
-                        @hasrole('Admin')
+                        @hasrole('Администратор-делопроизводитель')
                         <li>
                             <a href="{{ route('roles.index') }}" class="nav-link align-middle px-0">
                                 <ion-icon name="mail"></ion-icon>

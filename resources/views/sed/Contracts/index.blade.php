@@ -29,7 +29,9 @@
                         <td class="">
                             <a href="/orders/{{ $url }}/{{ $org->id }}" class="btn btn-info">Подробнее</a>
                             <a href="{{ route('contracts.edit', ['id' => $org->id]) }}" class="btn btn-success">Редактировать</a>
-                            <a href="{{ route('contracts.delete', ['id' => $org->id]) }}" class="btn btn-danger">Удалить</a>
+                            @if (auth()->user()->hasrole('Администратор-делопроизводитель'))
+                                <a href="{{ route('contracts.delete', ['id' => $org->id]) }}" class="btn btn-danger">Удалить</a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
