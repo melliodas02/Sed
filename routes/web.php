@@ -90,6 +90,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/organizations/{id}/edit', [OrganizationController::class, 'edit'])->name('organization.edit');
     Route::post('/organizations/{id}/save_changes', [OrganizationController::class, 'saveChanges'])->name('organization.saveChanges');
     Route::get('/organizations/{id}/remove', [OrganizationController::class, 'remove'])->name('organization.remove');
+    Route::get('/org/init', [OrganizationController::class, 'init_agents']);
 
     /**
      * Роуты для входящих документов

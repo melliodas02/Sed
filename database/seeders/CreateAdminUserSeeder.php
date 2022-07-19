@@ -21,6 +21,7 @@ class CreateAdminUserSeeder extends Seeder
             'MiddleName' => 'Айнурович',
             'LastName' => 'Юлчурин',
             'Position' => 'Программист',
+            'BirthDay' => '2000-06-14',
             'email' => 'poseydonplay02@gmail.com',
             'password' => bcrypt('Gangsta14@.')
         ]);
@@ -35,6 +36,7 @@ class CreateAdminUserSeeder extends Seeder
             'MiddleName' => 'Васильевич',
             'LastName' => 'Лукьянов',
             'Position' => 'Управляющий',
+            'BirthDay' => '1985-04-30',
             'email' => 'alukyanov@domonline.ru',
             'password' => bcrypt('admin')
         ]);

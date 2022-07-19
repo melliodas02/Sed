@@ -185,6 +185,12 @@ return [
          */
         Webklex\IMAP\Providers\LaravelServiceProvider::class,
 
+
+        /**
+         * Exel Providers
+         */
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
     ],
 
     /*
@@ -244,6 +250,11 @@ return [
          * Webklex IMAP aliases
          */
         'Client' => Webklex\IMAP\Facades\Client::class,
+
+        /**
+         * Excel aliases
+         */
+        'Excel' => \Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];
