@@ -98,7 +98,10 @@ class OrganizationController extends Controller
                 $us = new User;
                 $us->LastName = $fio[0];
                 $us->FirstName = $fio[1];
-                $us->MiddleName = $fio[2];
+                if (isset($fio[2]))
+                {
+                    $us->MiddleName = $fio[2];
+                }
                 $bd = explode('.', $user[2]);
                 $us->BirthDay = $bd[2].'-'.$bd[1].'-'.$bd[0];
                 $us->save();
