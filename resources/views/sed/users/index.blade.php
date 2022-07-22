@@ -54,5 +54,5 @@
             window.sessionStorage.clear();
         })
     </script>
-    {!! $data->render() !!}
+
 @endsection
