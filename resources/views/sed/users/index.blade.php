@@ -48,11 +48,12 @@
                 </tbody>
             </table>
         </div>
+        {!! $data->render() !!}
     </div>
     <script>
         $(document).ready(function () {
             window.sessionStorage.clear();
         })
     </script>
-    {!! $data->render() !!}
+
 @endsection
