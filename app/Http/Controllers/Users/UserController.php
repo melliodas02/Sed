@@ -25,10 +25,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $data = User::orderBy('id','DESC');
-        return view('sed.users.index',compact('data'));
+        return view('sed.users.index',compact('data'))
+            ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
     /**
