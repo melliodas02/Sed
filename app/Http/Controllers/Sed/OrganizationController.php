@@ -13,6 +13,15 @@ use function Psy\debug;
 
 class OrganizationController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('permission:org-list|org-create|org-edit|org-delete', ['only' => ['index', 'create']]);
+        $this->middleware('permission:org-create', ['only' => ['add', 'create']]);
+        $this->middleware('permission:org-edit', ['only' => ['edit', 'saveChanges']]);
+        $this->middleware('permission:org-delete', ['only' => ['remove']]);
+        $this->middleware('permission:org-update', ['only' => ['init_agents']]);
+    }
+
     public function index()
     {
         $organizations = Organization::all();
@@ -90,20 +99,17 @@ class OrganizationController extends Controller
         ini_set('memory_limit', '100M');
         $u = (new UsersImport)->toArray('init_files/123.xlsx', 'public');
 
-        foreach($u[0] as $user)
-        {
+        foreach ($u[0] as $user) {
             $fio = explode(' ', $user[1]);
-            if (User::where('LastName', '=', $fio[0])->count() == 0)
-            {
+            if (User::where('LastName', '=', $fio[0])->count() == 0) {
                 $us = new User;
                 $us->LastName = $fio[0];
                 $us->FirstName = $fio[1];
-                if (isset($fio[2]))
-                {
+                if (isset($fio[2])) {
                     $us->MiddleName = $fio[2];
                 }
                 $bd = explode('.', $user[2]);
-                $us->BirthDay = $bd[2].'-'.$bd[1].'-'.$bd[0];
+                $us->BirthDay = $bd[2] . '-' . $bd[1] . '-' . $bd[0];
                 $us->save();
             }
         }
@@ -111,18 +117,15 @@ class OrganizationController extends Controller
         $org = (new OrganizationsImport)->toArray('init_files/Org.xlsx', 'public');
         $org = $org[0];
 
-        foreach ($org as $o)
-        {
-            if (strlen($o[1]) == 10)
-            {
+        foreach ($org as $o) {
+            if (strlen($o[1]) == 10) {
                 if (Organization::where('INN', '=', $o[1])->count() == 0) {
                     $token = "f904fe93299d45f292cbc9191cf90d9ce97b7ce0";
                     $dadata = new \Dadata\DadataClient($token, null);
                     $result = $dadata->suggest("party", $o[1]);
                     $organization = new Organization;
                     $organization->OrganizationName = $result[0]['data']['name']['full_with_opf'];
-                    if(isset($result[0]['data']['name']['short_with_opf']))
-                    {
+                    if (isset($result[0]['data']['name']['short_with_opf'])) {
                         $organization->OrganizationAbbreviatedName = $result[0]['data']['name']['short_with_opf'];
                     } else {
                         $organization->OrganizationAbbreviatedName = $result[0]['data']['name']['full_with_opf'];

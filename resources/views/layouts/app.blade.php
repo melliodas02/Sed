@@ -152,18 +152,18 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="{{ route('organization.index') }}" class="nav-link align-middle px-0">
-                                <ion-icon name="briefcase"></ion-icon>
-                                <span class="ms-1 d-none d-sm-inline">Организации</span>
-                            </a>
-                        </li>
-                        <li>
                             <a href="{{ route('mails.index') }}" class="nav-link align-middle px-0">
                                 <ion-icon name="mail"></ion-icon>
                                 <span class="ms-1 d-none d-sm-inline">Почта</span>
                             </a>
                         </li>
                         @hasrole('Администратор-делопроизводитель')
+                        <li>
+                            <a href="{{ route('organization.index') }}" class="nav-link align-middle px-0">
+                                <ion-icon name="briefcase"></ion-icon>
+                                <span class="ms-1 d-none d-sm-inline">Организации</span>
+                            </a>
+                        </li>
                         <li>
                             <a href="{{ route('roles.index') }}" class="nav-link align-middle px-0">
                                 <ion-icon name="mail"></ion-icon>
