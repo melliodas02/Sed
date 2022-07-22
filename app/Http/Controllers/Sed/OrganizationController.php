@@ -135,8 +135,8 @@ class OrganizationController extends Controller
                     $organization->INN = $o[0];
                     $fio = explode(' ', $result[0]['data']['management']['name']);
                     $organization->LastName = $fio[0];
-                    $organization->FirstName = $fio[0];
-                    $organization->MiddleName = $fio[0];
+                    $organization->FirstName = $fio[1];
+                    $organization->MiddleName = $fio[2];
                     $organization->save();
                 }
             }
