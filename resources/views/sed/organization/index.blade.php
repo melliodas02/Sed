@@ -43,6 +43,7 @@
 {{--                <h3>Организации отсутствуют</h3>--}}
 {{--            @endif--}}
         </div>
+        {!! $organizations->render() !!}
     </div>
     <script>
         $(document).ready(function () {
