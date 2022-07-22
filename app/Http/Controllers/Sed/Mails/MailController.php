@@ -25,11 +25,12 @@ use Illuminate\Support\Facades\File;
 
 class MailController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $messages = Mail::all();
+        $messages = Mail::orderBy('id', 'DESC')->paginate(10);
 
-        return view('sed.Mails.index', compact('messages'));
+        return view('sed.Mails.index', compact('messages'))
+            ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
     public function update()

@@ -45,6 +45,7 @@
                 </tbody>
             </table>
         </div>
+        {!! $messages->render() !!}
     </div>
     <script>
         $(document).ready(function () {
